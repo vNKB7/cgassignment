@@ -1,10 +1,20 @@
 #include <iostream>
+#include "CGObject.h"
+
 using namespace std;
 
 int main()
 {
-	for (int i = 0; i<8; i++)
-	{
-		printf("x:%f y:%f z:%f\n\n", ((i >> 2) & 1) - 0.5, ((i >> 1) & 1) - 0.5, ((i & 1)) - 0.5);
-	}
+	Vector3 v1(23, 0, 0);
+	Vector3 v2(0, 41, 0);
+	Vector3 v3(0, 0, 1);
+
+	Vector3 a = v1 - v2;
+	Vector3 b = v1 - v3;
+	Vector3 c = v2 - v3;
+
+
+	double result = a.cross(b).dot(c);
+	cout << result << endl;
 }
+
