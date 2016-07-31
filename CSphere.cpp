@@ -3,7 +3,7 @@
 
 CSphere::CSphere(){}
 
-CSphere::CSphere(const Vector3& _Center, const double& _Radius)
+CSphere::CSphere(const Vector3& _Center, const double& _Radius, Vector3 _Ka, Vector3 _Kd, Vector3 _Ks, double _Shininess, double _Reflectivity, bool _isTransparent) :CGObject(_Ka, _Kd, _Ks, _Shininess, _Reflectivity, _isTransparent)
 {
 	m_Center = _Center;
 	m_Radius = _Radius;
@@ -13,10 +13,12 @@ CSphere::CSphere(const Vector3& _Center, const double& _Radius)
 
 CSphere::~CSphere(){}
 
+
 Vector3 CSphere::getNormal(Vector3 _Point)
 {
 	return Vector3();
 }
+
 
 INTERSECTION_TYPE CSphere::isIntersected(CRay _Ray, double& out_Distance)
 {
@@ -45,5 +47,3 @@ INTERSECTION_TYPE CSphere::isIntersected(CRay _Ray, double& out_Distance)
 	}
 	return retval;
 }
-
-//CSphere& CSphere::operator=(const CSphere& _copy);

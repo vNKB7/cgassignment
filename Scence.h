@@ -26,6 +26,7 @@ public:
 	void initScence();
 	Vector3 RayTracing(const CRay& ray, int depth);
 	void writeFrameBuffer();
+	CGObject *findNearestObject(const CRay& ray);
 }
 
 #endif

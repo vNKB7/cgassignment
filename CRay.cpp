@@ -14,7 +14,7 @@ CRay::CRay(Vector3 _Origin, Vector3 _Direction)
 
 CRay::~CRay(){}
 
-Vector3 CRay::getPoint(double _t)
+Vector3 CRay::getPoint(double _t) const
 {
 	return m_Origin + m_Direction * _t;
 }
