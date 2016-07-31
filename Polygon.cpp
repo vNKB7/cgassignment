@@ -12,11 +12,6 @@ Polygon::Polygon()
 
 }
 
-Polygon::Polygon(const Polygon& polygon)
-{
-	//????
-}
-
 /*
 Vector3 Polygon::getNormal(Vector3 _Point)
 {

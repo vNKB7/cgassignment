@@ -18,14 +18,36 @@ public:
 		this->z = z;
 	}
 
+	Vector3(double d)
+	{
+		this->x = d;
+		this->y = d;
+		this->z = d;
+	}
+
 	/*
 	Vector3(const Vector3& v)
 	{
-		x = v.x;
-		y = v.y;
-		z = v.z;
+	x = v.x;
+	y = v.y;
+	z = v.z;
 	}
 	*/
+
+	void set(double x, double y, double z)
+	{
+		this->x = x;
+		this->y = y;
+		this->z = z;
+	}
+
+	void set(double d)
+	{
+		this->x = d;
+		this->y = d;
+		this->z = d;
+	}
+	
 
 	Vector3 operator-() const
 	{
@@ -104,7 +126,7 @@ public:
 		return tmp;
 	}
 
-	Vector3 operator/(const Vector3& v)
+	Vector3 operator/(const Vector3& v) const
 	{
 		Vector3 tmp = *this;
 		tmp /= v;
@@ -123,6 +145,17 @@ public:
 		x = v.x;
 		y = v.y;
 		z = v.z;
+	}
+
+	double operator [](int i){
+		if (i == 0)
+			return x;
+		else if (i == 1)
+			return y;
+		else if (i == 2)
+			return z;
+		else
+			return 0;
 	}
 
 	Vector3 cross(const Vector3& b) const
@@ -147,6 +180,11 @@ public:
 	void normalize()
 	{
 		*this /= this->abs();
+	}
+
+	Vector3 norm()
+	{
+		return *this / this->abs();
 	}
 
 	bool isSame(const Vector3& b) const

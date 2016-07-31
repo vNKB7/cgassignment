@@ -14,7 +14,7 @@ public:
 public:
 	Polygon(const vector<Vector3>& nvertex);
 	Polygon();
-	Polygon(const Polygon& polygon);
+	//Polygon(const Polygon& polygon);
 	//Vector3 getNormal(Vector3 _Point);
 	bool isPointInPolygon(const Vector3& _Point);	// 判断点是不是在多边形内
 	void setVertexes(const vector<Vector3>& nvertex);	//设置多边形的顶点

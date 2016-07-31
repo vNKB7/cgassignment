@@ -1,20 +1,80 @@
-#include <iostream>
+#include <GL/glut.h>
+#include <stdlib.h>
+#include <ctype.h>
 #include "CGObject.h"
 
 using namespace std;
 
-int main()
+
+
+void init(void)
 {
-	Vector3 v1(23, 0, 0);
-	Vector3 v2(0, 41, 0);
-	Vector3 v3(0, 0, 1);
+	glClearColor(0.0, 0.0, 0.0, 0.0);
+	glShadeModel(GL_SMOOTH);
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+	glEnable(GL_DEPTH_TEST);
 
-	Vector3 a = v1 - v2;
-	Vector3 b = v1 - v3;
-	Vector3 c = v2 - v3;
-
-
-	double result = a.cross(b).dot(c);
-	cout << result << endl;
 }
 
+void display(void)
+{
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glRasterPos2f(0, 0);
+	
+
+	glFlush();
+	glutSwapBuffers();
+}
+
+void reshape(int w, int h)
+{
+	glViewport(0, 0, (GLsizei)w, (GLsizei)h);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+}
+
+void mouse(int button, int state, int x, int y)
+{
+
+}
+
+void special(int key, int x, int y)
+{
+}
+
+void keyboard(unsigned char key, int x, int y)
+{
+	switch (key)
+	{
+	case 27:
+		exit(0);
+		break;
+	}
+	if (isdigit(key))
+	{
+		//TRACE_DEPTH = key - '0';
+		//scene.isSceneChanged = true;
+		//printf("tracing depth %d updatting\n", TRACE_DEPTH);
+		glutPostRedisplay();
+	}
+}
+
+int main(int argc, char** argv)
+{
+	glutInit(&argc, argv);
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+	glutInitWindowSize(400, 400);
+	glutInitWindowPosition(400, 400);
+	glutCreateWindow(argv[0]);
+	init();
+	glutDisplayFunc(display);
+	glutReshapeFunc(reshape);
+	//glutMouseFunc(mouse);
+	glutKeyboardFunc(keyboard);
+	glutSpecialFunc(special);
+	glutMainLoop();
+	return 0;
+}
