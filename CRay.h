@@ -13,7 +13,7 @@ public:
 	CRay();
 	CRay(Vector3 _Origin, Vector3 _Direction);
 	~CRay();
-	Vector3 getPoint(double _t) const;
+	Vector3 getPoint(float _t) const;
 };
 
 #endif

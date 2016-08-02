@@ -2,10 +2,11 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include "CGObject.h"
+#include "Scene.h"
 
 using namespace std;
 
-
+Scene scene;
 
 void init(void)
 {
@@ -21,8 +22,8 @@ void display(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glRasterPos2f(0, 0);
-	
-
+	scene.displayScene();
+	//scene.test();
 	glFlush();
 	glutSwapBuffers();
 }
@@ -66,7 +67,7 @@ int main(int argc, char** argv)
 {
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-	glutInitWindowSize(400, 400);
+	glutInitWindowSize(scene.pix_Width, scene.pix_Height);
 	glutInitWindowPosition(400, 400);
 	glutCreateWindow(argv[0]);
 	init();

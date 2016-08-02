@@ -2,23 +2,24 @@
 #define VECTOR3_H
 
 #include <math.h>
+#include<stdio.h>
 #include "global.h"
 
 class Vector3
 {
 public:
-	double x, y, z;
+	float x, y, z;
 public:
 	Vector3(){}
 
-	Vector3(double x, double y, double z)
+	Vector3(float x, float y, float z)
 	{
 		this->x = x;
 		this->y = y;
 		this->z = z;
 	}
 
-	Vector3(double d)
+	Vector3(float d)
 	{
 		this->x = d;
 		this->y = d;
@@ -34,14 +35,14 @@ public:
 	}
 	*/
 
-	void set(double x, double y, double z)
+	void set(float x, float y, float z)
 	{
 		this->x = x;
 		this->y = y;
 		this->z = z;
 	}
 
-	void set(double d)
+	void set(float d)
 	{
 		this->x = d;
 		this->y = d;
@@ -68,14 +69,14 @@ public:
 		z -= v.z;
 	}
 
-	void operator*=(double r)
+	void operator*=(float r)
 	{
 		x *= r;
 		y *= r;
 		z *= r;
 	}
 
-	void operator/=(double r)
+	void operator/=(float r)
 	{
 		x /= r;
 		y /= r;
@@ -112,14 +113,14 @@ public:
 		return tmp;
 	}
 
-	Vector3 operator*(double r)const
+	Vector3 operator*(float r)const
 	{
 		Vector3 tmp = *this;
 		tmp *= r;
 		return tmp;
 	}
 
-	Vector3 operator/(double r)const
+	Vector3 operator/(float r)const
 	{
 		Vector3 tmp = *this;
 		tmp /= r;
@@ -133,7 +134,7 @@ public:
 		return tmp;
 	}
 
-	void operator=(double f)
+	void operator=(float f)
 	{
 		x = f;
 		y = f;
@@ -147,7 +148,12 @@ public:
 		z = v.z;
 	}
 
-	double operator [](int i){
+	bool operator==(const Vector3& v)
+	{
+		return x == v.x && y == v.y && z == v.z;
+	}
+
+	float operator [](int i){
 		if (i == 0)
 			return x;
 		else if (i == 1)
@@ -167,12 +173,12 @@ public:
 		return tmp;
 	}
 
-	double dot(const Vector3& b) const
+	float dot(const Vector3& b) const
 	{
 		return x*b.x + y*b.y + z*b.z;
 	}
 
-	double abs() const
+	float abs() const
 	{
 		return sqrt(x*x + y*y + z*z);
 	}
@@ -180,6 +186,11 @@ public:
 	void normalize()
 	{
 		*this /= this->abs();
+	}
+
+	bool near(const Vector3& v)
+	{
+		return length(v) < 0.001;
 	}
 
 	Vector3 norm()
@@ -192,9 +203,14 @@ public:
 		return fabs(this->x - b.x) <= EPS && fabs(this->y - b.y) <= EPS && fabs(this->z - b.z) <= EPS;
 	}
 
-	double length(const Vector3& b)
+	float length(const Vector3& b)
 	{
 		return (*this - b).abs();
+	}
+
+	void show()
+	{
+		printf("V3 x:%f y:%f z:%f\n", x, y, z);
 	}
 
 };

@@ -16,7 +16,7 @@ public :
 	~CDirectionalLight();
 	Vector3 EvalAmbient(Vector3 _material_Ka);
 	Vector3 EvalDiffuse(Vector3 _material_Kd, Vector3 _N, Vector3 _L);
-	Vector3 EvalSpecular(Vector3 _material_Ks, double _material_Shininess, Vector3 _N, Vector3 _L, Vector3 _V);
+	Vector3 EvalSpecular(Vector3 _material_Ks, float _material_Shininess, Vector3 _N, Vector3 _L, Vector3 _V);
 
 };
 

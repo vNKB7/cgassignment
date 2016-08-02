@@ -2,7 +2,7 @@
 #define GLOBAL_H
 
 
-#define EPS 1E-6
+#define EPS 1E-4
 enum INTERSECTION_TYPE { INTERSECTED_IN = -1, MISS = 0, INTERSECTED = 1 };
 
 
