@@ -19,6 +19,7 @@ class CGObject
 {
 public:
 	Material material;
+	bool individual;//是否逐点定义材质
 	//Vector3 m_Ka;
 	//Vector3 m_Kd;
 	//Vector3 m_Ks;
@@ -27,11 +28,11 @@ public:
 	//bool isTransparent;
 public:
 	CGObject();
-	CGObject(Vector3 _Ka, Vector3 _Kd, Vector3 _Ks, float _Shininess, float _Reflectivity, bool _isTransparent);
+	CGObject(Vector3 _Ka, Vector3 _Kd, Vector3 _Ks, float _Shininess, float _Reflectivity, bool _isTransparent, bool _individual);
 	~CGObject();
 	virtual Vector3 getNormal(Vector3 _Point) = 0;
 	virtual INTERSECTION_TYPE isIntersected(CRay _Ray, float& out_Distance) = 0;
-	virtual Material getMaterial(Vector3 _Point, bool individual) = 0;
+	virtual Material getMaterial(Vector3 _Point) = 0;
 };
 
 #endif

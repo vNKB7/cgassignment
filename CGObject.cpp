@@ -2,7 +2,7 @@
 
 CGObject::CGObject(){}
 
-CGObject::CGObject(Vector3 _Ka, Vector3 _Kd, Vector3 _Ks, float _Shininess, float _Reflectivity, bool _isTransparent)
+CGObject::CGObject(Vector3 _Ka, Vector3 _Kd, Vector3 _Ks, float _Shininess, float _Reflectivity, bool _isTransparent, bool _individual)
 {
 	material.m_Ka = _Ka;
 	material.m_Kd = _Kd;
@@ -10,6 +10,7 @@ CGObject::CGObject(Vector3 _Ka, Vector3 _Kd, Vector3 _Ks, float _Shininess, floa
 	material.m_Shininess = _Shininess;
 	material.m_Reflectivity = _Reflectivity;
 	material.isTransparent = _isTransparent;
+	individual = _individual;
 }
 
 CGObject::~CGObject(){}

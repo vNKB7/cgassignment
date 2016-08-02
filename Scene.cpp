@@ -36,8 +36,8 @@ Scene::~Scene()
 void Scene::initScene()
 {
 	printf("initScene begin\n");
-	m_Object.push_back(new CSphere(Vector3(3, 3, 3), 2, Vector3(0.3, 0.7, 0.3), Vector3(0.3, 0.7, 0.3), Vector3(1, 1, 1), 8, 0.7, false));
-	m_Object.push_back(new CSphere(Vector3(-3, 3, 3), 2, Vector3(0.3, 0.7, 0.3), Vector3(0.3, 0.7, 0.3), Vector3(1, 1, 1), 8, 0.7, false));
+	m_Object.push_back(new CSphere(Vector3(8, 15, 15), 15, Vector3(0.3, 0.7, 0.3), Vector3(0.3, 0.7, 0.3), Vector3(1, 1, 1), 8, 0.7, false, false));
+	m_Object.push_back(new CSphere(Vector3(-8, 15, 15), 15, Vector3(0.7, 0.3, 03), Vector3(0.3, 0.7, 0.3), Vector3(1, 1, 1), 8, 0.7, false, false));
 	
 	Vector3 box[7];
 	int vIndex[3][4] = {
@@ -55,22 +55,22 @@ void Scene::initScene()
 
 	for (int i = 0; i<3; i++)
 	{
-		m_Object.push_back(new Polygon(box, vIndex[i], 4, Vector3(0.3, 0.3, 0.3), Vector3(0.2, 0.6, 0.6), Vector3(1, 1, 1), 8, 1, false));
+		m_Object.push_back(new Polygon(box, vIndex[i], 4, Vector3(0.3, 0.3, 0.3), Vector3(0.2, 0.6, 0.6), Vector3(1, 1, 1), 8, 1, false, true));
 	}
 
 	//m_Object.push_back(new Polygon(box, vIndex[0], 4, Vector3(0, 0, 0.7), Vector3(1, 0, 0.0), Vector3(1, 1, 1), 8, 1, false));
 
 
 	//设置光源
-	m_LightSource.push_back(new CDirectionalLight(Vector3(20, 20, 20), Vector3(0.2, 0.2, 0.2), Vector3(0.5,0.5,0.5), Vector3(1,1,1), Vector3(-1, -1, -1)));
+	m_LightSource.push_back(new CDirectionalLight(Vector3(0, 60, 20), Vector3(0.2, 0.2, 0.2), Vector3(0.8,0.8,0.8), Vector3(1,1,1), Vector3(0, -3, -1)));
 	//m_LightSource.push_back(new CDirectionalLight(Vector3(10, 5, 0), Vector3(0.3, 0.3, 0.3), Vector3(0.5, 0.5, 0.5), Vector3(0), Vector3(-1, -1, 0)));
 
 	//设置相机
-	m_Eye.set(0, 10, 10);
-	m_Direction.set(0, -1, -1);
-	distance = 3;
-	win_Width = 5;
-	win_Height = 5;
+	m_Eye.set(0, 20, 40);
+	m_Direction.set(0, -1, -2);
+	distance = 10;
+	win_Width = 15;
+	win_Height = 15;
 
 	computeWindow();
 
@@ -240,7 +240,7 @@ Vector3 Scene::RayTracing(const CRay& ray, int depth)
 	if (objIndex != -1)
 	{
 		//printf("8\n");
-		Material Mat = m_Object[objIndex]->getMaterial(intersection, false);
+		Material Mat = m_Object[objIndex]->getMaterial(intersection);
 		Vector3 p = intersection;
 		Vector3 N = m_Object[objIndex]->getNormal(p);
 		N.normalize();
@@ -250,7 +250,6 @@ Vector3 Scene::RayTracing(const CRay& ray, int depth)
 			Vector3 p;
 			findNearestObject(CRay(m_LightSource[i]->m_Postion,intersection - m_LightSource[i]->m_Postion), p);
 			
-
 			Vector3 ambient = m_LightSource[i]->EvalAmbient(Mat.m_Ka);
 			Vector3 L = m_LightSource[i]->m_Postion - p;
 			L.normalize();

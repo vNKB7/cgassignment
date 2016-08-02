@@ -3,7 +3,7 @@
 
 CSphere::CSphere(){}
 
-CSphere::CSphere(const Vector3& _Center, const float& _Radius, Vector3 _Ka, Vector3 _Kd, Vector3 _Ks, float _Shininess, float _Reflectivity, bool _isTransparent) :CGObject(_Ka, _Kd, _Ks, _Shininess, _Reflectivity, _isTransparent)
+CSphere::CSphere(const Vector3& _Center, const float& _Radius, Vector3 _Ka, Vector3 _Kd, Vector3 _Ks, float _Shininess, float _Reflectivity, bool _isTransparent, bool _individual) :CGObject(_Ka, _Kd, _Ks, _Shininess, _Reflectivity, _isTransparent, _individual)
 {
 	m_Center = _Center;
 	m_Radius = _Radius;
@@ -51,7 +51,7 @@ INTERSECTION_TYPE CSphere::isIntersected(CRay _Ray, float& out_Distance)
 }
 
 
-Material CSphere::getMaterial(Vector3 _Point, bool individual)
+Material CSphere::getMaterial(Vector3 _Point)
 {
 	if (!individual){
 		return material;

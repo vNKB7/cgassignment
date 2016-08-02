@@ -2,13 +2,13 @@
 #include <math.h>
 #include "global.h"
 
-Polygon::Polygon(const vector<Vector3>& nvertex, Vector3 _Ka, Vector3 _Kd, Vector3 _Ks, float _Shininess, float _Reflectivity, bool _isTransparent) :CGObject(_Ka, _Kd, _Ks, _Shininess, _Reflectivity, _isTransparent)
+Polygon::Polygon(const vector<Vector3>& nvertex, Vector3 _Ka, Vector3 _Kd, Vector3 _Ks, float _Shininess, float _Reflectivity, bool _isTransparent, bool _individual) :CGObject(_Ka, _Kd, _Ks, _Shininess, _Reflectivity, _isTransparent, _individual)
 {
 	vertex = nvertex;
 	computeNorm();
 }
 
-Polygon::Polygon(const Vector3 vpt[], int index[], int n, Vector3 _Ka, Vector3 _Kd, Vector3 _Ks, float _Shininess, float _Reflectivity, bool _isTransparent) :CGObject(_Ka, _Kd, _Ks, _Shininess, _Reflectivity, _isTransparent)
+Polygon::Polygon(const Vector3 vpt[], int index[], int n, Vector3 _Ka, Vector3 _Kd, Vector3 _Ks, float _Shininess, float _Reflectivity, bool _isTransparent, bool _individual) :CGObject(_Ka, _Kd, _Ks, _Shininess, _Reflectivity, _isTransparent, _individual)
 {
 	vertex.resize(n);
 	for (int i = 0; i<n; i++)
@@ -29,7 +29,7 @@ Vector3 Polygon::getNormal(Vector3 _Point)
 	return normal;
 }
 
-void Polygon::setVertexes(const vector<Vector3>& nvertex, Vector3 _Ka, Vector3 _Kd, Vector3 _Ks, float _Shininess, float _Reflectivity, bool _isTransparent)
+void Polygon::setVertexes(const vector<Vector3>& nvertex, Vector3 _Ka, Vector3 _Kd, Vector3 _Ks, float _Shininess, float _Reflectivity, bool _isTransparent, bool _individual)
 {
 	vertex = nvertex;
 	computeNorm();
@@ -41,7 +41,7 @@ void Polygon::setVertexes(const vector<Vector3>& nvertex, Vector3 _Ka, Vector3 _
 	material.isTransparent = _isTransparent;
 }
 
-void Polygon::setVertexes(const Vector3 vpt[], int index[], int n, Vector3 _Ka, Vector3 _Kd, Vector3 _Ks, float _Shininess, float _Reflectivity, bool _isTransparent)
+void Polygon::setVertexes(const Vector3 vpt[], int index[], int n, Vector3 _Ka, Vector3 _Kd, Vector3 _Ks, float _Shininess, float _Reflectivity, bool _isTransparent, bool _individual)
 {
 	int i;
 	vertex.resize(n);
@@ -140,13 +140,32 @@ INTERSECTION_TYPE Polygon::isIntersected(CRay _Ray, float& out_Distance)
 	return retval;
 }
 
-Material Polygon::getMaterial(Vector3 _Point, bool individual)
+Material Polygon::getMaterial(Vector3 _Point)
 {
 	if (!individual){
 		return material;
 	}
-	else{
-		//???
-		return material;
+	else{//¾ØÐÎÏÞ¶¨
+		Material m;
+		m.isTransparent = false;
+		m.m_Reflectivity = 8;
+		m.m_Shininess = 0.7;
+
+		Vector3 v = (vertex[1] - vertex[0]).norm();
+		Vector3 h = (vertex[3] - vertex[0]).norm();
+		Vector3 offset = _Point - vertex[0];
+		float hOffest = abs(h.dot(offset));
+		float vOffest = abs(v.dot(offset));
+		if (((int)(hOffest/10) + (int)(vOffest/10)) % 2 < EPS){
+			m.m_Ka = Vector3(0.7);
+			m.m_Kd = Vector3(1);
+			m.m_Ks = Vector3(1);
+		}
+		else{
+			m.m_Ka = Vector3(0);
+			m.m_Kd = Vector3(0);
+			m.m_Ks = Vector3(0);
+		}
+		return m;
 	}
 }
