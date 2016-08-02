@@ -24,13 +24,14 @@ public:
 	int pix_Width, pix_Height;	//设备窗口大小
 	vector<Vector3> buffer;	//RGB三色的buffer
 	bool isSceneChanged;
+	int TotalTraceDepth;
 public:
 	void test();
 	void writePic();
 	void initScene();
-	Vector3 RayTracing(const CRay& ray, int depth);
+	Vector3 RayTracing(const CRay& ray, int depth, int sourceObj);
 	void writeFrameBuffer();
-	int findNearestObject(const CRay& ray, Vector3 &Intersection);
+	int findNearestObject(const CRay& ray, Vector3 &Intersection, int sourceObj);
 	void displayScene();
 	void computeWindow();
 };

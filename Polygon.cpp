@@ -2,13 +2,13 @@
 #include <math.h>
 #include "global.h"
 
-Polygon::Polygon(const vector<Vector3>& nvertex, Vector3 _Ka, Vector3 _Kd, Vector3 _Ks, float _Shininess, float _Reflectivity, bool _isTransparent, bool _individual) :CGObject(_Ka, _Kd, _Ks, _Shininess, _Reflectivity, _isTransparent, _individual)
+Polygon::Polygon(const vector<Vector3>& nvertex, Vector3 _Ka, Vector3 _Kd, Vector3 _Ks, Vector3 _Kr, float _Shininess, float _Reflectivity, bool _isTransparent, bool _individual) :CGObject(_Ka, _Kd, _Ks, _Kr, _Shininess, _Reflectivity, _isTransparent, _individual)
 {
 	vertex = nvertex;
 	computeNorm();
 }
 
-Polygon::Polygon(const Vector3 vpt[], int index[], int n, Vector3 _Ka, Vector3 _Kd, Vector3 _Ks, float _Shininess, float _Reflectivity, bool _isTransparent, bool _individual) :CGObject(_Ka, _Kd, _Ks, _Shininess, _Reflectivity, _isTransparent, _individual)
+Polygon::Polygon(const Vector3 vpt[], int index[], int n, Vector3 _Ka, Vector3 _Kd, Vector3 _Ks, Vector3 _Kr, float _Shininess, float _Reflectivity, bool _isTransparent, bool _individual) :CGObject(_Ka, _Kd, _Ks, _Kr, _Shininess, _Reflectivity, _isTransparent, _individual)
 {
 	vertex.resize(n);
 	for (int i = 0; i<n; i++)
@@ -29,19 +29,20 @@ Vector3 Polygon::getNormal(Vector3 _Point)
 	return normal;
 }
 
-void Polygon::setVertexes(const vector<Vector3>& nvertex, Vector3 _Ka, Vector3 _Kd, Vector3 _Ks, float _Shininess, float _Reflectivity, bool _isTransparent, bool _individual)
+void Polygon::setVertexes(const vector<Vector3>& nvertex, Vector3 _Ka, Vector3 _Kd, Vector3 _Ks, Vector3 _Kr, float _Shininess, float _Reflectivity, bool _isTransparent, bool _individual)
 {
 	vertex = nvertex;
 	computeNorm();
 	material.m_Ka = _Ka;
 	material.m_Kd = _Kd;
 	material.m_Ks = _Ks;
+	material.m_Kr = _Kr;
 	material.m_Shininess = _Shininess;
 	material.m_Reflectivity = _Reflectivity;
 	material.isTransparent = _isTransparent;
 }
 
-void Polygon::setVertexes(const Vector3 vpt[], int index[], int n, Vector3 _Ka, Vector3 _Kd, Vector3 _Ks, float _Shininess, float _Reflectivity, bool _isTransparent, bool _individual)
+void Polygon::setVertexes(const Vector3 vpt[], int index[], int n, Vector3 _Ka, Vector3 _Kd, Vector3 _Ks, Vector3 _Kr, float _Shininess, float _Reflectivity, bool _isTransparent, bool _individual)
 {
 	int i;
 	vertex.resize(n);
@@ -52,6 +53,7 @@ void Polygon::setVertexes(const Vector3 vpt[], int index[], int n, Vector3 _Ka, 
 	material.m_Ka = _Ka;
 	material.m_Kd = _Kd;
 	material.m_Ks = _Ks;
+	material.m_Kr = _Kr;
 	material.m_Shininess = _Shininess;
 	material.m_Reflectivity = _Reflectivity;
 	material.isTransparent = _isTransparent;
@@ -160,11 +162,13 @@ Material Polygon::getMaterial(Vector3 _Point)
 			m.m_Ka = Vector3(0.7);
 			m.m_Kd = Vector3(1);
 			m.m_Ks = Vector3(1);
+			m.m_Kr = Vector3(1);
 		}
 		else{
 			m.m_Ka = Vector3(0);
 			m.m_Kd = Vector3(0);
 			m.m_Ks = Vector3(0);
+			m.m_Kr = Vector3(1);
 		}
 		return m;
 	}

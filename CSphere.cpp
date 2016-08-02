@@ -3,7 +3,7 @@
 
 CSphere::CSphere(){}
 
-CSphere::CSphere(const Vector3& _Center, const float& _Radius, Vector3 _Ka, Vector3 _Kd, Vector3 _Ks, float _Shininess, float _Reflectivity, bool _isTransparent, bool _individual) :CGObject(_Ka, _Kd, _Ks, _Shininess, _Reflectivity, _isTransparent, _individual)
+CSphere::CSphere(const Vector3& _Center, const float& _Radius, Vector3 _Ka, Vector3 _Kd, Vector3 _Ks, Vector3 _Kr, float _Shininess, float _Reflectivity, bool _isTransparent, bool _individual) :CGObject(_Ka, _Kd, _Ks, _Kr, _Shininess, _Reflectivity, _isTransparent, _individual)
 {
 	m_Center = _Center;
 	m_Radius = _Radius;

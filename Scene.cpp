@@ -36,11 +36,11 @@ Scene::~Scene()
 void Scene::initScene()
 {
 	printf("initScene begin\n");
-	m_Object.push_back(new CSphere(Vector3(8, 15, 15), 15, Vector3(0.3, 0.7, 0.3), Vector3(0.3, 0.7, 0.3), Vector3(1, 1, 1), 8, 0.7, false, false));
-	m_Object.push_back(new CSphere(Vector3(-8, 15, 15), 15, Vector3(0.7, 0.3, 03), Vector3(0.3, 0.7, 0.3), Vector3(1, 1, 1), 8, 0.7, false, false));
+	m_Object.push_back(new CSphere(Vector3(6, 6, 15), 15, Vector3(0.3, 0.7, 0.3), Vector3(0.3, 0.7, 0.3), Vector3(1, 1, 1), Vector3(0.3), 100, 0.7, false, false));
+	m_Object.push_back(new CSphere(Vector3(-6, 6, 15), 15, Vector3(0.7, 0.3, 03), Vector3(0.3, 0.7, 0.3), Vector3(1, 1, 1), Vector3(0.3), 100, 0.7, false, false));
 	
 	Vector3 box[7];
-	int vIndex[3][4] = {
+	int vIndex[2][4] = {
 		{ 0, 1, 2, 3 },
 		{ 1, 4, 5, 2 }
 	};
@@ -53,21 +53,25 @@ void Scene::initScene()
 	box[5].set(100, 0, 100);
 
 
-	for (int i = 0; i<3; i++)
+	for (int i = 0; i<2; i++)
 	{
-		m_Object.push_back(new Polygon(box, vIndex[i], 4, Vector3(0.3, 0.3, 0.3), Vector3(0.2, 0.6, 0.6), Vector3(1, 1, 1), 8, 1, false, true));
+		m_Object.push_back(new Polygon(box, vIndex[i], 4, Vector3(0.3, 0.3, 0.3), Vector3(0.2, 0.6, 0.6), Vector3(1, 1, 1), Vector3(0.3), 8, 1, false, true));
 	}
 
 	//m_Object.push_back(new Polygon(box, vIndex[0], 4, Vector3(0, 0, 0.7), Vector3(1, 0, 0.0), Vector3(1, 1, 1), 8, 1, false));
 
 
 	//设置光源
-	m_LightSource.push_back(new CDirectionalLight(Vector3(0, 60, 20), Vector3(0.2, 0.2, 0.2), Vector3(0.8,0.8,0.8), Vector3(1,1,1), Vector3(0, -3, -1)));
+	m_LightSource.push_back(new CDirectionalLight(Vector3(0, 40, 20), Vector3(0.2, 0.2, 0.2), Vector3(0.8,0.8,0.8), Vector3(1,1,1), Vector3(0, -2, -1)));
+	//m_LightSource.push_back(new CDirectionalLight(Vector3(0, 20, 40), Vector3(0.2, 0.2, 0.2), Vector3(0.8, 0.8, 0.8), Vector3(1, 1, 1), Vector3(0, -1, -2)));
+	//m_LightSource.push_back(new CDirectionalLight(Vector3(0, 20, 40), Vector3(0.2, 0.2, 0.2), Vector3(0.8, 0.8, 0.8), Vector3(1, 1, 1), Vector3(0, -1, -2)));
+
 	//m_LightSource.push_back(new CDirectionalLight(Vector3(10, 5, 0), Vector3(0.3, 0.3, 0.3), Vector3(0.5, 0.5, 0.5), Vector3(0), Vector3(-1, -1, 0)));
 
+
 	//设置相机
-	m_Eye.set(0, 20, 40);
-	m_Direction.set(0, -1, -2);
+	m_Eye.set(0, 20, 30);
+	m_Direction.set(0, -2, -3);
 	distance = 10;
 	win_Width = 15;
 	win_Height = 15;
@@ -77,6 +81,8 @@ void Scene::initScene()
 	pix_Width = 400;
 	pix_Height = 400;
 	buffer.resize(pix_Width*pix_Height);
+
+	TotalTraceDepth = 2;
 
 	isSceneChanged = true;
 	printf("initScene end\n");
@@ -107,7 +113,7 @@ void Scene::test()
 
 	Vector3 intersection, color(0, 0, 0);
 	CRay ray(Vector3(10, 0, 0), Vector3(-1, 0, 0));
-	int objIndex = findNearestObject(ray, intersection);
+	int objIndex = findNearestObject(ray, intersection, -2);
 	printf("%d\n", objIndex);
 	intersection.show();
 
@@ -141,7 +147,7 @@ void Scene::test()
 	color.show();
 }
 
-int Scene::findNearestObject(const CRay& ray, Vector3 &Intersection)
+int Scene::findNearestObject(const CRay& ray, Vector3 &Intersection, int sourceObj)
 {
 	int objects_numbers = m_Object.size();
 	float distance = 1000000; // 初始化无限大距离
@@ -150,7 +156,7 @@ int Scene::findNearestObject(const CRay& ray, Vector3 &Intersection)
 	for (int i = 0; i<objects_numbers; i++)  // 遍历场景中每一个物体
 	{
 		CGObject *obj = m_Object[i];
-		if (obj->isIntersected(ray, distance) != MISS) // 判断是否有交点
+		if (obj->isIntersected(ray, distance) != MISS && i != sourceObj) // 判断是否有交点
 		{
 			Intersection = ray.getPoint(distance); //如果相交，求出交点保存到Intersection
 			objIndex = i;
@@ -183,7 +189,7 @@ void Scene::writeFrameBuffer()
 			
 			CRay ray(m_Eye, direction);
 			//printf("5\n");
-			Vector3 color = RayTracing(ray, 0);
+			Vector3 color = RayTracing(ray, 0, -2);
 			//printf("9\n");
 			buffer[point++] = color;
 			//buffer.push_back(color);
@@ -230,16 +236,22 @@ void Scene::writePic()
 	fout.close();
 }
 
-Vector3 Scene::RayTracing(const CRay& ray, int depth)
+Vector3 Scene::RayTracing(const CRay& ray, int depth, int sourceObj)
 {
 	//printf("6\n");
+
+	if (TotalTraceDepth == depth){
+		return Vector3(0, 0, 0);
+	}
+
 	Vector3 intersection, color(0,0,0);
-	int objIndex = findNearestObject(ray, intersection);
+	int objIndex = findNearestObject(ray, intersection, sourceObj);
 	//printf("7\n");
 	//printf("objIndex = %d\n", objIndex);
 	if (objIndex != -1)
 	{
 		//printf("8\n");
+
 		Material Mat = m_Object[objIndex]->getMaterial(intersection);
 		Vector3 p = intersection;
 		Vector3 N = m_Object[objIndex]->getNormal(p);
@@ -248,25 +260,38 @@ Vector3 Scene::RayTracing(const CRay& ray, int depth)
 		for (int i = 0; i < m_LightSource.size(); i++)
 		{
 			Vector3 p;
-			findNearestObject(CRay(m_LightSource[i]->m_Postion,intersection - m_LightSource[i]->m_Postion), p);
+			findNearestObject(CRay(m_LightSource[i]->m_Postion, intersection - m_LightSource[i]->m_Postion), p, -2);
 			
 			Vector3 ambient = m_LightSource[i]->EvalAmbient(Mat.m_Ka);
-			Vector3 L = m_LightSource[i]->m_Postion - p;
-			L.normalize();
-			Vector3 diffuse = m_LightSource[i]->EvalDiffuse(Mat.m_Kd, N, L);
-			Vector3 V = m_Eye - p;
-			V.normalize();
-			Vector3 specular = m_LightSource[i]->EvalSpecular(Mat.m_Ks, Mat.m_Shininess, N, L, V);
 			
-			if (!(ambient == Vector3(0))&&(diffuse + specular) == Vector3(0)){
-				GCount++;
-			}
 			color += ambient;
 			if (intersection.near(p))//算起来误差挺大的
 			{
+				Vector3 L = m_LightSource[i]->m_Postion - p;
+				L.normalize();
+				Vector3 diffuse = m_LightSource[i]->EvalDiffuse(Mat.m_Kd, N, L);
+				Vector3 V = m_Eye - p;
+				V.normalize();
+				Vector3 specular = m_LightSource[i]->EvalSpecular(Mat.m_Ks, Mat.m_Shininess, N, L, V);
 				color += diffuse + specular;
 			}
 		}
+
+		//RayTracing()
+		//CRay mray;
+		//Vector3 Ir;
+
+		if (objIndex == 0 && intersection.y < 20 && intersection.x > -5 && intersection.x < 5){
+			int a = 1;
+		}
+
+		CRay mray(intersection, ray.m_Direction - N * (ray.m_Direction).dot(N) * 2);
+
+		Vector3 Ir = RayTracing(mray, depth + 1, objIndex);
+		color.isAColor();
+		color = Vector3(Ir.x * Mat.m_Kr.x,
+			Ir.y * Mat.m_Kr.y,
+			Ir.z * Mat.m_Kr.z)* 0.25 + color * 0.75;
 	}
 
 	return color;
