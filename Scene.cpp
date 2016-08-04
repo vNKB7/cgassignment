@@ -1,12 +1,14 @@
 #include "Scene.h"
 #include "CSphere.h"
-#include "Polygon.h"
 #include "CDirectionalLight.h"
 #include "CRay.h"
 #include "test.h"
+#include "BmpFile.h"
+#include "CPolygon.h"
 #include <gl/glut.h>
 #include <iostream>
 #include <fstream>
+
 using namespace std;
 
 int GCount = 0;
@@ -36,29 +38,25 @@ Scene::~Scene()
 void Scene::initScene()
 {
 	printf("initScene begin\n");
-	m_Object.push_back(new CSphere(Vector3(6, 6, 15), 15, Vector3(0.3, 0.7, 0.3), Vector3(0.3, 0.7, 0.3), Vector3(1, 1, 1), Vector3(0.3), 100, 0.7, false, false));
-	m_Object.push_back(new CSphere(Vector3(-6, 6, 15), 15, Vector3(0.7, 0.3, 03), Vector3(0.3, 0.7, 0.3), Vector3(1, 1, 1), Vector3(0.3), 100, 0.7, false, false));
+	//m_Object.push_back(new CSphere(Vector3(6, 6, 15), 15, Vector3(0.3, 0.7, 0.3), Vector3(0.3, 0.7, 0.3), Vector3(1, 1, 1), Vector3(0.3), 100, 0.7, false, false));
+	//m_Object.push_back(new CSphere(Vector3(-6, 6, 15), 15, Vector3(0.7, 0.3, 03), Vector3(0.3, 0.7, 0.3), Vector3(1, 1, 1), Vector3(0.3), 100, 0.7, false, false));
 	
 	Vector3 box[7];
-	int vIndex[2][4] = {
+	int vIndex[1][4] = {
 		{ 0, 1, 2, 3 },
-		{ 1, 4, 5, 2 }
 	};
 	
-	box[0].set(-100, 100, 0);
-	box[1].set(-100, 0, 0);
-	box[2].set(100, 0, 0);
-	box[3].set(100, 100, 0);
-	box[4].set(-100, 0, 100);
-	box[5].set(100, 0, 100);
+	box[0].set(0,10,0);
+	box[1].set(0,0,0);
+	box[2].set(10,0,0);
+	box[3].set(10,10,0);
 
+	CPolygon *p = new CPolygon(box, vIndex[0], 4, Vector3(0.3, 0.3, 0.3), Vector3(0.2, 0.6, 0.6), Vector3(1, 1, 1), Vector3(0.3), 8, 1, false, true);
+	p->setTexture(new BmpFile("nv.bmp"), 2, 10);
+	m_Object.push_back(p);
 
-	for (int i = 0; i<2; i++)
-	{
-		m_Object.push_back(new Polygon(box, vIndex[i], 4, Vector3(0.3, 0.3, 0.3), Vector3(0.2, 0.6, 0.6), Vector3(1, 1, 1), Vector3(0.3), 8, 1, false, true));
-	}
-
-	//m_Object.push_back(new Polygon(box, vIndex[0], 4, Vector3(0, 0, 0.7), Vector3(1, 0, 0.0), Vector3(1, 1, 1), 8, 1, false));
+	printf("readover\n");
+	//m_Object.push_back(new CPolygon(box, vIndex[0], 4, Vector3(0, 0, 0.7), Vector3(1, 0, 0.0), Vector3(1, 1, 1), 8, 1, false));
 
 
 	//设置光源
@@ -70,8 +68,8 @@ void Scene::initScene()
 
 
 	//设置相机
-	m_Eye.set(0, 20, 30);
-	m_Direction.set(0, -2, -3);
+	m_Eye.set(20, 5, 20);
+	m_Direction.set(-20, -5, -20);
 	distance = 10;
 	win_Width = 15;
 	win_Height = 15;
@@ -147,7 +145,7 @@ void Scene::test()
 	color.show();
 }
 
-int Scene::findNearestObject(const CRay& ray, Vector3 &Intersection, int sourceObj)
+int Scene::findNearestObject(const CRay& ray, Vector3 &Intersection, int sourceObj)//不能把起点的object算在内！！
 {
 	int objects_numbers = m_Object.size();
 	float distance = 1000000; // 初始化无限大距离
@@ -265,7 +263,7 @@ Vector3 Scene::RayTracing(const CRay& ray, int depth, int sourceObj)
 			Vector3 ambient = m_LightSource[i]->EvalAmbient(Mat.m_Ka);
 			
 			color += ambient;
-			if (intersection.near(p))//算起来误差挺大的
+			if (intersection.nearpoint(p))//算起来误差挺大的
 			{
 				Vector3 L = m_LightSource[i]->m_Postion - p;
 				L.normalize();

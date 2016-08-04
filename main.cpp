@@ -3,6 +3,7 @@
 #include <ctype.h>
 #include "CGObject.h"
 #include "Scene.h"
+#include "BmpFile.h"
 
 using namespace std;
 

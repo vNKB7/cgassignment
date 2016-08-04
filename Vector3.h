@@ -188,7 +188,7 @@ public:
 		*this /= this->abs();
 	}
 
-	bool near(const Vector3& v)
+	bool nearpoint(const Vector3& v)
 	{
 		return length(v) < 0.001;
 	}
